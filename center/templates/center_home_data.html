@@ -1,0 +1,316 @@
+{% extends 'center_base.html' %}
+{% block main %}
+<style type="text/css">
+  a:link {
+    text-decoration: none;
+  }
+  .order-card {
+    color: rgb(255, 255, 255);
+  }
+  .bg-c-blue {
+    background: #04868f;
+  }
+  .bg-c-green {
+    background: #4C51BF;
+  }
+  .bg-c-yellow {
+    background: #F56565;
+  }
+  .bg-c-pink {
+    background: #3186ca;
+  }
+  .card {
+    -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+    box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+    margin-bottom: 30px;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+  }
+  .card .card-block {
+    padding: 8px;
+  }
+  .order-card i {
+    font-size: 26px;
+  }
+  .f-left {
+    float: left;
+  }
+  .f-right {
+    float: right;
+  }
+  header {
+    left: 0px;
+    right: 0px;
+  }
+</style>
+<h4 class="py-auto text-danger" style="border-bottom: 2px solid green;">Center Dashboard</h4>
+<div class="container">
+  <div class="row text-center">
+    <div class="col-sm-12 ">
+      <div class="card shadow">
+        <div class="card-body">
+          <h6 class="text-success">Welcome Back To NERP Portal</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 col-xl-3">
+      <a href="{% url 'admin_view_course' 'Certified Multimedia Dev' %}" style="text-decoration: none;color:white;">
+        <div class="card bg-c-green order-card">
+          <div class="card-block">
+            <table class="table table-sm table-bordered bg-white " style="padding: 0; margin: 0;">
+              <h6 class="m-b-20 text-center">Certified Multimedia Dev:{{total_cmd}}</h6>
+              <tr>
+                <th>Name</th>
+                <th>Pass</th>
+                <th>Fail</th>
+                <th>AB</th>
+              </tr>
+              <tr>
+                <td>Prac-1</td>
+                <td>{{total_cmd_p1_pass}}</td>
+                <td>{{total_cmd_p1_fail}}</td>
+                <td>{{total_cmd_p1_ab}}</td>
+              </tr>
+              <tr>
+                <td>Th-1</td>
+                <td>{{total_cmd_t1_pass}}</td>
+                <td>{{total_cmd_t1_fail}}</td>
+                <td>{{total_cmd_t1_ab}}</td>
+              </tr>
+              <tr>
+                <td>Overall</td>
+                <td>{{total_cmd_over_pass}}</td>
+                <td>{{total_cmd_over_fail}}</td>
+                <td>{{total_cmd_over_ab}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4 col-xl-3">
+      <a href="{% url 'admin_view_course' 'Cyber Security Assistant' %}" style="text-decoration: none;color:white;">
+        <div class="bg-info order-card">
+          <div class="card-block">
+            <table class="table table-sm table-bordered bg-white " style="padding: 0; margin: 0;">
+              <h6 class="m-b-20 text-center">Cyber Security Assistant : {{total_csa}}</h6>
+              <tr>
+                <th>Name</th>
+                <th>Pass</th>
+                <th>Fail</th>
+                <th>AB</th>
+              </tr>
+              <tr>
+                <td>Prac-1</td>
+                <td>{{total_csa_p1_pass}}</td>
+                <td>{{total_csa_p1_fail}}</td>
+                <td>{{total_csa_p1_ab}}</td>
+              </tr>
+              <tr>
+                <td>Th-1</td>
+                <td>{{total_csa_t1_pass}}</td>
+                <td>{{total_csa_t1_fail}}</td>
+                <td>{{total_csa_t1_ab}}</td>
+              </tr>
+              <tr>
+                <td>Th-2</td>
+                <td>{{total_csa_t2_pass}}</td>
+                <td>{{total_csa_t2_fail}}</td>
+                <td>{{total_csa_t2_ab}}</td>
+              </tr>
+              <tr>
+                <td>Overall</td>
+                <td>{{total_csa_over_pass}}</td>
+                <td>{{total_csa_over_fail}}</td>
+                <td>{{total_csa_over_ab}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4 col-xl-3">
+      <a href="{% url 'admin_view_course' 'Certified Web Developer' %}" style="text-decoration: none;color:white;">
+        <div class="card bg-c-yellow order-card">
+          <div class="card-block">
+            <table class="table table-sm table-bordered bg-white " style="padding: 0; margin: 0;">
+              <h6 class="m-b-20 text-center">Certified Web Developer:{{total_cwd}}</h6>
+              <tr>
+                <th>Name</th>
+                <th>Pass</th>
+                <th>Fail</th>
+                <th>AB</th>
+              </tr>
+              <tr>
+                <td>Prac-1</td>
+                <td>{{total_cwd_p1_pass}}</td>
+                <td>{{total_cwd_p1_fail}}</td>
+                <td>{{total_cwd_p1_ab}}</td>
+              </tr>
+              <tr>
+                <td>Th-1</td>
+                <td>{{total_cwd_t1_pass}}</td>
+                <td>{{total_cwd_t1_fail}}</td>
+                <td>{{total_cwd_t1_ab}}</td>
+              </tr>
+              <tr>
+                <td>Th-2</td>
+                <td>{{total_cwd_t2_pass}}</td>
+                <td>{{total_cwd_t2_fail}}</td>
+                <td>{{total_cwd_t2_ab}}</td>
+              </tr>
+              <tr>
+                <td>Overall</td>
+                <td>{{total_cwd_over_pass}}</td>
+                <td>{{total_cwd_over_fail}}</td>
+                <td>{{total_cwd_over_ab}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4 col-xl-3">
+      <a href="{% url 'admin_view_course' 'Data Entry' %}" style="text-decoration: none;color:white;">
+        <div class="card bg-c-pink order-card">
+          <div class="card-block">
+            <table class="table table-sm table-bordered bg-white " style="padding: 0; margin: 0;">
+              <h6 class="m-b-20 text-center"> CDEOA(DEO) : {{total_deo}}</h6>
+              <tr>
+                <th>Name</th>
+                <th>Pass</th>
+                <th>Fail</th>
+                <th>AB</th>
+              </tr>
+              <tr>
+                <td>Prac-1</td>
+                <td>{{total_deo_p1_pass}}</td>
+                <td>{{total_deo_p1_fail}}</td>
+                <td>{{total_deo_p1_ab}}</td>
+              </tr>
+              <tr>
+                <td>Th-1</td>
+                <td>{{total_deo_t1_pass}}</td>
+                <td>{{total_deo_t1_fail}}</td>
+                <td>{{total_deo_t1_ab}}</td>
+              </tr>
+              <tr>
+                <td>Typing</td>
+                <td>{{total_deo_tp_pass}}</td>
+                <td>{{total_deo_tp_fail}}</td>
+                <td>{{total_deo_tp_ab}}</td>
+              </tr>
+              <tr>
+                <td>Overall</td>
+                <td>{{total_deo_over_pass}}</td>
+                <td>{{total_deo_over_fail}}</td>
+                <td>{{total_deo_over_ab}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4 col-xl-3">
+      <a href="{% url 'admin_view_course' 'Certified Computer Application Accounting and Publishing Assistant' %}" style="text-decoration: none;color:white;">
+        <div class="card bg-c-green order-card">
+          <div class="card-block">
+            <table class="table table-sm table-bordered bg-white " style="padding: 0; margin: 0;">
+              <h6 class="m-b-20 text-center"> CAAPA : {{total_caapa}}</h6>
+              <tr>
+                <th>Name</th>
+                <th>Pass</th>
+                <th>Fail</th>
+                <th>AB</th>
+              </tr>
+              <tr>
+                <td>Prac-1</td>
+                <td>{{total_caapa_p1_pass}}</td>
+                <td>{{total_caapa_p1_fail}}</td>
+                <td>{{total_caapa_p1_ab}}</td>
+              </tr>
+              <tr>
+                <td>Th-1</td>
+                <td>{{total_caapa_t1_pass}}</td>
+                <td>{{total_caapa_t1_fail}}</td>
+                <td>{{total_caapa_t1_ab}}</td>
+              </tr>
+              <tr>
+                <td>Th-2</td>
+                <td>{{total_caapa_t2_pass}}</td>
+                <td>{{total_caapa_t2_fail}}</td>
+                <td>{{total_caapa_t2_ab}}</td>
+              </tr>
+              <tr>
+                <td>Overall</td>
+                <td>{{total_caapa_over_pass}}</td>
+                <td>{{total_caapa_over_fail}}</td>
+                <td>{{total_caapa_over_ab}}</td>
+              </tr>
+            </table>
+          </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4 col-xl-3">
+    <div class="card bg-c-pink order-card">
+      <div class="card-block">
+        <i class="fas fa-user-graduate f-left text-center"> All Course : {{total_over}}</i>
+        <table class="table table-sm table-bordered bg-white " style="padding: 0; margin: 0;">
+          <hr>
+          <tr>
+            <th>Name</th>
+            <th>Pass</th>
+            <th>Fail</th>
+            <th>AB</th>
+          </tr>
+          <hr>
+          <tr>
+            <td>Total</td>
+            <td>{{total_over_pass}}</td>
+            <td>{{total_over_fail}}</td>
+            <td>{{total_over_ab}}</td>
+          </tr>
+          <tr>
+            <td>Per(%)</td>
+            <td>{{total_over_pass_per}}</td>
+            <td>{{total_over_fail_per}}</td>
+            <td>{{total_over_ab_per}}</td>
+          </tr>
+        </table>
+        <br>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $(document).ready(function() {
+    $('#refresh-cmd').click(function() {
+        $.ajax({
+            url: '{% url "center_home" %}',
+            method: 'GET',
+            data: {
+                course: 'Certified Multimedia Dev'
+            },
+            success: function(data) {
+                $('#total-cmd').text(data.total);
+                $('#cmd-p1-pass').text(data.pass);
+                $('#cmd-p1-fail').text(data.fail);
+                $('#cmd-p1-ab').text(data.ab);
+                $('#cmd-t1-pass').text(data.pass);
+                $('#cmd-t1-fail').text(data.fail);
+                $('#cmd-t1-ab').text(data.ab);
+                $('#cmd-over-pass').text(data.pass);
+                $('#cmd-over-fail').text(data.fail);
+                $('#cmd-over-ab').text(data.ab);
+            },
+            error: function(error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

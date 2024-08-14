@@ -1,0 +1,77 @@
+{% load static %}
+
+<html>
+
+<head>
+  {% include 'header.html' %}
+  <style>
+    .headingfour:hover {
+      color: rgb(7, 143, 234);}
+  </style>
+</head>
+
+<body>
+  {% include 'navigation.html' %}
+
+  <!-- carousel start-->
+  <div id="demo" class="carousel slide " data-ride="carousel" style="margin-top : 1px">
+
+    <!-- Indicators -->
+    <ul class="carousel-indicators">
+      <li data-target="#demo" data-slide-to="0" class="active"></li>
+      <li data-target="#demo" data-slide-to="1"></li>
+
+
+    </ul>
+
+    <!-- The slideshow -->
+    <div class="carousel-inner">
+      <div class="carousel-item">
+        <img src="{% static 'images/nielit2.jpg' %}" width="100%" height="450">
+      </div>
+      <div class="carousel-item active">
+        <img src="{% static 'images/nielit1.jpg' %}" width="100%" height="450">
+      </div>
+
+
+
+
+    </div>
+
+    <!-- Left and right controls -->
+    <a class="carousel-control-prev" href="#demo" data-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </a>
+    <a class="carousel-control-next" href="#demo" data-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </a>
+  </div>
+
+  <!--carousel end-->
+  <div class="container-fluid" style=" height : 100px ; background-color:whitesmoke">
+    <br>
+    <h4 class="text-center text-dark">NSQF Examination Record Portal</h4>
+    <h6 class="text-center text-success mb-5">&copy; NIELIT Delhi 2024</h6>
+  </div>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>  
+  <script>
+    $(document).ready(function() {
+      $('#ajaxButton').click(function() {
+        $.ajax({
+          url: '{% url "admin_login" %}', 
+          type: 'GET', 
+          success: function(response) {
+            $('#ajaxResponse').html('<p>' + response.message + '</p>');
+          },
+          error: function(xhr, status, error) {
+            $('#ajaxResponse').html('<p>An error occurred: ' + error + '</p>');
+          }
+        });
+      });
+    });
+  </script>  
+
+
+</body>
+
+</html>

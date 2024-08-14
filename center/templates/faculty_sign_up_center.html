@@ -1,0 +1,195 @@
+{% extends 'center_base.html' %}
+{% block extra_css %}
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .container-fluid {
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-primary:hover {
+            background-color: #218838;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .col-sm-6 {
+            flex: 0 0 48%;
+            max-width: 48%;
+        }
+
+        .col-sm-12 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        h5 {
+            border-bottom: 2px solid orange;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('form[name="signup"]').on('submit', function (e) {
+            e.preventDefault();  
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function (response) {
+                    $('.alert').remove();
+                    $('<div class="alert alert-success">Account created successfully!</div>').insertBefore('form[name="signup"]');
+                },
+                error: function (response) {
+                    $('.alert').remove();
+                    if (response.responseJSON && response.responseJSON.errors) {
+                        $.each(response.responseJSON.errors, function (field, errors) {
+                            $.each(errors, function (index, error) {
+                                $('<div class="alert alert-danger">' + error + '</div>').insertBefore('form[name="signup"]');
+                            });
+                        });
+                    } else {
+                        $('<div class="alert alert-danger">An error occurred. Please try again.</div>').insertBefore('form[name="signup"]');
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid shadow m-2">
+        <div class="card-body">
+            <h5 class="p-2">Create an Account</h5>
+            <div class="container-fluid">
+                 {% if messages %}
+                    <div>
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <form method="POST" action="{% url 'faculty_signup_data' %}" name="signup">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="form-row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                {{ form.first_name.errors }}
+                                {{ form.first_name }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                {{ form.last_name.errors }}
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Username</label>
+                                {{ form.username.errors }}
+                                {{ form.username }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Center Name</label>
+                                {{ form.center_name.errors }}
+                                {{ form.center_name }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Course Name</label>
+                                {{ form.course_name.errors }}
+                                {{ form.course_name }}
+                            </div>
+                        </div>
+                         <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Date</label>
+                                {{ form.user_date.errors }}
+                                {{ form.user_date }}
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Email ID</label>
+                                {{ form.email.errors }}
+                                {{ form.email }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Password</label>
+                                {{ form.password1.errors }}
+                                {{ form.password1 }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                {{ form.password2.errors }}
+                                {{ form.password2 }}
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" value="Submit" class="m-2 px-3 btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+

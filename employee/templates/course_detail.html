@@ -1,0 +1,312 @@
+{% extends 'admin_base.html' %}
+{% block main %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        table-layout: auto;
+    }
+
+    th,
+    td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        word-wrap: break-word;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        color: #333;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .editable {
+        border: 1px solid #ddd;
+        padding: 8px;
+        border-radius: 5px;
+    }
+
+    .editable.editing {
+        border: 1px solid #87CEEB;
+        background-color: #f0f8ff;
+    }
+
+    .edit-button,
+    .save-button {
+        padding: 6px 10px;
+        border-radius: 3px;
+        background-color: #87CEEB;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    .save-button {
+        background-color: #28a745;
+    }
+
+    .edit-button:hover {
+        background-color: #0056b3;
+    }
+
+    .save-button:hover {
+        background-color: #218838;
+    }
+
+    .imgcontainer {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .NeilitHeader {
+        width: 100%;
+        height: auto;
+        display: inline-block;
+        border-radius: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    table + table {
+        margin-top: 20px;
+    }
+
+    .page-header {
+        background-color: #87CEEB;
+        color: white;
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header-title {
+        font-size: 24px;
+        margin: 0;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+    }
+
+    .search-form {
+        margin-right: 20px;
+    }
+
+    .search-form input[type="text"] {
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        font-size: 16px;
+        width: 250px;
+    }
+
+    .search-form button,
+    .export-btn button {
+        padding: 10px 20px;
+        border-radius: 5px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+
+    .search-form button:hover,
+    .export-btn button:hover {
+        background-color: #218838;
+    }
+</style>
+<h4 class="py-auto text-danger" style="border-bottom: 2px solid green;">{{ course_name }} Candidates</h4>
+<div class="container">
+    <div class="row text-center">
+        <div class="col-sm-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h6 class="text-success">List of Candidates for {{ course_name }}</h6>
+                    <div class="table-container">
+                        <table id="second_example" style="font-size: smaller; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="width:3%;">SI. No.</th>
+                                    <th style="width:2%;">Cat</th>
+                                    <th style="width:4%;">Batch Code</th>
+                                    <th style="width:10%;">Roll Number</th>
+                                    <th style="width:10%;">Course_Name</th>
+                                    <th style="width:5%;">Registration Number</th>
+                                    <th style="width:8%;">Name of the Candidate</th>
+                                    <th style="width:5%;">Date of Exam</th>
+                                    <th>Practical 1(60/90)</th>
+                                    <th>Internal Assessment(20/30)</th>
+                                    <th>Project(out of 20/30)</th>
+                                    <th>Typing_Speed</th>
+                                    <th>Theory1</th>
+                                    <th>Theory2</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in candidates %}
+                                <tr>
+                                    <input type="hidden" name="id" value="{{ item.id }}">
+                                    <td>{{ item.id }}</td>
+                                    <td>{{ item.Cat }}</td>
+                                    <td>{{ item.Batch_Code }}</td>
+                                    <td>{{ item.Roll_No }}</td>
+                                    <td>{{ item.Course_Name }}</td>
+                                    <td>{{ item.Registration_number }}</td>
+                                    <td>{{ item.Name_of_the_Candidate }}</td>
+                                    <td>{{ item.Date_of_Exam }}</td>
+                                    <td>{{ item.Practical1 }}</td>
+                                    <td>{{ item.Internal_Assessment }}</td>
+                                    <td>{{ item.Project }}</td>
+                                    <td>{{ item.Typing_Speed }}</td>
+                                    <td>{{ item.Theory1 }}</td>
+                                    <td>{{ item.Theory2 }}</td>
+                                    <td>{{ item.Total }}</td>
+                                    <td class="status-column"></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>  
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script>
+
+$(document).ready(function() {
+    function updateStatusColumn() {
+        $('#second_example tbody tr').each(function() {
+            var category = $(this).find('td:eq(1)').text().trim();
+            var practical1 = parseFloat($(this).find('td:eq(8)').text());
+            var internalAssessment = parseFloat($(this).find('td:eq(9)').text());
+            var project = parseFloat($(this).find('td:eq(10)').text());
+            var typingSpeed = parseFloat($(this).find('td:eq(11)').text());
+            var theory1 = parseFloat($(this).find('td:eq(12)').text());
+            var theory2 = $(this).find('td:eq(13)').text().trim();
+            var status = 'Fail';
+
+            if (category === 'A') {
+                if (practical1 > 30 && internalAssessment > 10 && project > 10 && theory1 > 50) {
+                    if (theory2.toLowerCase() === 'na' || parseFloat(theory2) > 30) {
+                        status = 'Pass';
+                    }
+                }
+            } else if (category === 'B') {
+                if (practical1 > 45 && internalAssessment > 15 && project > 10 && theory1 > 50 && parseFloat(theory2) > 50) {
+                    status = 'Pass';
+                }
+            } else if (category === 'C') {
+                if (practical1 > 30 && internalAssessment > 10 && project > 10 && typingSpeed > 35 && theory1 > 50) {
+                    if (theory2.toLowerCase() === 'na' || parseFloat(theory2) > 30) {
+                        status = 'Pass';
+                    }
+                }
+            }
+
+            $(this).find('.status-column').text(status);
+        });
+    }
+
+    updateStatusColumn();
+
+    var table = $('#second_example').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'pdfHtml5',
+                orientation: 'landscape',
+                pageSize: 'A3',
+                customize: function(doc) {
+                    var colWidths = [];
+                    $('#second_example thead th').each(function() {
+                        colWidths.push('auto');
+                    });
+                    doc.content[1].table.widths = colWidths;
+                    doc.content[1].table.headerRows = 1;
+                    doc.defaultStyle.fontSize = 8;
+
+                    // Add status column data to the PDF
+                    var bodyData = [];
+                    $('#second_example tbody tr').each(function() {
+                        var row = [];
+                        $(this).find('td').each(function() {
+                            row.push($(this).text().trim());
+                        });
+                        // Push status column text
+                        row.push($(this).find('.status-column').text());
+                        bodyData.push(row);
+                    });
+                    doc.content[1].table.body = bodyData;
+                }
+            },
+            'copyHtml5',
+            'excelHtml5',
+            'csvHtml5'
+        ]
+    });
+    $('#filter-form').on('submit', function(event) {
+        event.preventDefault();
+        $.ajax({
+            url: '{% url "display_data" %}',
+            type: 'GET',
+            data: $(this).serialize(),
+            success: function(response) {
+                $('#table-container').html(response.html);
+                updateStatusColumn();
+            },
+            error: function(xhr, status, error) {
+                console.error('An error occurred:', error);
+            }
+        });
+    });
+});
+
+
+
+
+
+</script>
+{% endblock %}

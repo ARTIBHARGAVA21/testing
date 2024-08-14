@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NSQF Examination Record Portal</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#example').DataTable({
+    dom: 'Bfrtip',
+    buttons: [
+        {
+            extend: 'pdfHtml5',
+            orientation: 'landscape',
+            pageSize: 'LEGAL', 
+            customize: function (doc) {
+                var colWidths = [];
+                $('#example thead th').each(function () {
+                    colWidths.push('auto');
+                });
+                doc.content[1].table.widths = colWidths;
+                doc.content[1].table.headerRows = 1;
+                doc.defaultStyle.fontSize = 8;
+            }
+        },
+        'copyHtml5',
+        'excelHtml5',
+        'csvHtml5'
+    ]
+});
+$('#searchForm').submit(function(event) {
+    event.preventDefault();
+    var form = $(this);
+    var url = form.attr('action');
+    $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: form.serialize(),
+        success: function(response) {
+            $('#attendanceTable').html($(response).find('#attendanceTable').html());
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error: ' + status + error);
+        }
+    });
+});
+});
+        
+    </script>
+    {% block extra_js %}
+
+    {% endblock %}
+    <style>
+        .list-group-item {
+            padding: 8px !important;
+        }
+    </style>
+    {% block extra_css %}
+    {% endblock %}
+</head>
+<body>
+    {% load static %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2 p-0">
+                <center>
+                    <img src="{% static 'images/adminlogin.png' %}" width="100" height="100" class="img-thumbnail rounded-circle my-3">
+                </center>
+                <div class="list-group">
+                    <a href="{% url 'center_home' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/center_home' %}active{% endif %}">Dashboard</a>
+                    <a href="{% url 'center_month' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/center_month' %}active{% endif %}">All Candidates</a>
+                    <a href="{% url 'center_download' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/center_download' %}active{% endif %}">Download Reports</a>
+                    <a href="{% url 'attandancedetail_center' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/attandance_center' %}active{% endif %}">Attandance</a>
+                    <a href="/logout" class="list-group-item list-group-item-warning list-group-item-action">Logout</a>
+                </div>
+            </div>
+            <div class="col-sm-10 p-0">
+                <div class="container-fluid p-1">
+                    <h6 class="p-3 text-center font-weight-bold" style="border-bottom: 2px solid green; border-top: 2px solid green;">NSQF Examination Record Portal</h6>
+                    <div class="card shadow" style="min-height: 89vh;">
+                        <div class="card-body">
+                            {% block main %}
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

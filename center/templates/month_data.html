@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Table</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .data-table {
+            width: 96%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        .data-table th {
+            background-color: #ADD8E6;
+            text-decoration-color: white;
+        }
+        .data-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .data-table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .data-table input[type="text"] {
+            width: 100%;
+            padding: 4px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .merge {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .data-table button {
+            background-color: #007bff; /* Blue color */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+        }
+        .data-table button:hover {
+            background-color: #0056b3;
+        }
+        .dropdown-container {
+            flex-grow: 1;
+        }
+        .button {
+            flex-shrink: 0;
+        }
+        .heading {
+            text-align: center;
+        }
+        .logout-container {
+            position: absolute;
+            top: 100px;
+            right: 10px;
+        }
+        .logout-container {
+            display: flex;
+            justify-content: flex-end;
+            margin: 20px;
+        }
+        .logout-container button {
+            background-color: #007bff; /* Blue color */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .logout-container button:hover {
+            background-color: #0056b3; /* Darker blue color */
+        }
+    </style>
+</head>
+<body>
+
+{% load static %}
+<div class="imgcontainer">
+    <img src="{% static 'NielitHeaderNew.jpg' %}" alt="NeilitHeader" class="NeilitHeader">
+</div>
+
+<div class="select-course">
+    <form method="get">
+        {% csrf_token %}
+        <div class="merge">
+            <div class="dropdown-container">
+                <label for="course_name">Course Name:</label>
+                <select name="course_name" id="course_name">
+                    <option value="">SELECT</option>
+                    {% for name in course_names %}
+                    <option value="{{ name }}" {% if name == selected_course %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="button">
+                <button type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Display success messages -->
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+    {% endfor %}
+{% endif %}
+
+{% if selected_course %}
+    {% if course_submission_exists %}
+        <div class="alert alert-info">
+            Data for the selected course has already been submitted.
+        </div>
+    {% else %}
+    <h5>Center Code: {{ center_code }}</h5>
+    <form id="month_data_form" method="POST">
+        {% csrf_token %}
+        <table id="month_table" class="data-table">
+            <thead>
+                <tr>
+                    <th style="width:3%;">SI. No.</th>
+                    <th style="width:10%;">Roll Number</th>
+                    <th style="width:5%;">Registration Number</th>
+                    <th style="width:8%;">Name of the Candidate</th>
+                    <th style="width:5%;">Date of Exam</th>
+                    <th>Assignment/Project</th>
+                    <th>Practical</th>
+                    <th>Internal Assessment 1</th>
+                    <th>Internal Assessment 2</th>
+                    <th>Total Internal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.Roll_No }}</td>
+                    <td>{{ item.Registration_number }}</td>
+                    <td>{{ item.Name_of_the_Candidate }}</td>
+                    <td>{{ item.Date_of_Exam }}</td>
+                    <td><input type="text" name="assignment_{{ item.id }}" value="{{ item.Project }}"></td>
+                    <td><input type="text" name="practical_{{ item.id }}" value="{{ item.Practical1 }}"></td>
+                    <td><input type="text" name="internal1_{{ item.id }}" value="{{ item.IS1 }}"></td>
+                    <td><input type="text" name="internal2_{{ item.id }}" value="{{ item.IS2 }}"></td>
+                    <td><input type="text" name="total_internal_{{ item.id }}" value="{{ item.Internal_Assessment }}"></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10">No data available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit">Submit</button>
+    </form>
+    {% endif %}
+{% endif %}
+
+<script>
+    $(document).ready(function () {
+        $('#month_data_form').on('submit', function (e) {
+            e.preventDefault();  
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function (response) {
+                    alert('Data submitted successfully!');
+                },
+                error: function (response) {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
+

@@ -1,0 +1,203 @@
+{% extends 'admin_base.html' %}
+{% block extra_css %}
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            width: 100%;
+        }
+    
+        .full-width {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+        }
+    
+        .container-fluid {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+    
+        .form-group {
+            margin-bottom: 15px;
+        }
+    
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+    
+        .btn-primary {
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    
+        .btn-primary:hover {
+            background-color: #218838;
+        }
+    
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+    
+        .col-sm-6 {
+            flex: 0 0 48%;
+            max-width: 48%;
+        }
+    
+        .col-sm-12 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    
+        h5 {
+            border-bottom: 2px solid orange;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+    
+        .alert {
+            margin-top: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid shadow m-2">
+        <div class="card-body">
+            <h5 class="p-2">Create an Account</h5>
+            <div class="container-fluid">
+                 {% if messages %}
+                    <div>
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <form method="POST" action="{% url 'faculty_signup_data' %}" name="signup">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="form-row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                {{ form.first_name.errors }}
+                                {{ form.first_name }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                {{ form.last_name.errors }}
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Username</label>
+                                {{ form.username.errors }}
+                                {{ form.username }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Center Name</label>
+                                {{ form.center_name.errors }}
+                                {{ form.center_name }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Course Name</label>
+                                {{ form.course_name.errors }}
+                                {{ form.course_name }}
+                            </div>
+                        </div>
+                         <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Date</label>
+                                {{ form.user_date.errors }}
+                                {{ form.user_date }}
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Email ID</label>
+                                {{ form.email.errors }}
+                                {{ form.email }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Password</label>
+                                {{ form.password1.errors }}
+                                {{ form.password1 }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                {{ form.password2.errors }}
+                                {{ form.password2 }}
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" value="Submit" class="m-2 px-3 btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>       
+    <script>
+        function submitForm() {
+            var formData = $('#signupForm').serialize();
+            $.ajax({
+                url: $('#signupForm').attr('action'),
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    $('.alert').remove();
+                    if (response.success) {
+                        $('#signupForm').trigger('reset'); 
+                        $('.container-fluid').prepend('<div class="alert alert-success">Account created successfully!</div>');
+                    } else {
+                        Object.keys(response.errors).forEach(function(key) {
+                            $('#' + key + '-error').remove();
+                            $('#' + key).after('<div id="' + key + '-error" class="alert alert-danger">' + response.errors[key][0] + '</div>');
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    </script>
+{% endblock %}
+
+
+

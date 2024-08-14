@@ -1,0 +1,31 @@
+{% extends 'nielit_header.html' %}
+
+{% block content %}
+
+{% load static %}
+<div class="imgcontainer">
+    <img src="{% static 'NielitHeaderNew.jpg' %}" alt="NeilitHeader" class="NeilitHeader">
+</div>
+
+
+
+{% endblock content %}
+{% block scripts %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>       
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+            $.ajax({
+                type: 'GET', 
+                url: '/ajax_example/',  
+                success: function (response) {
+                    $('#ajaxResponse').html('<p>AJAX request successful!</p>');
+                },
+                error: function (error) {
+                    $('#ajaxResponse').html('<p>Failed to send AJAX request.</p>');
+                   
+                }
+            });
+        });
+</script>
+{% endblock scripts %}

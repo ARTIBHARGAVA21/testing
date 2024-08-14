@@ -1,0 +1,314 @@
+{% extends 'center_base.html' %}
+{% block extra_css %}
+ <style>
+        /* Your CSS styles here */
+         body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Search form styles */
+        .table-container {
+            overflow-x: hidden;
+            /* Hide horizontal scroll bar */
+            overflow-y: auto;
+            /* Show vertical scroll bar if needed */
+            border: 1px solid #ddd;
+            /* Add border for better visualization */
+            border-radius: 5px;
+            /* Add border radius for better appearance */
+        }
+
+        /* Table styles */
+        table {
+            overflow: hidden;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            table-layout: fixed;
+            /* Ensure fixed layout to prevent cell overflow */
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            word-wrap: break-word;
+            /* Wrap long words to prevent overflow */
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Editable fields styles */
+        .editable {
+            border: 1px solid #ddd;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        .editable.editing {
+            border: 1px solid #87CEEB;
+            background-color: #f0f8ff;
+            /* Light blue */
+        }
+
+        /* Edit and Save button styles */
+        .edit-button,
+        .save-button {
+            padding: 6px 10px;
+            border-radius: 3px;
+            background-color: #87CEEB;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .save-button {
+            background-color: #28a745;
+            /* Green */
+        }
+
+        .edit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .save-button:hover {
+            background-color: #218838;
+            /* Dark green */
+        }
+
+        .imgcontainer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .NeilitHeader {
+            width: 100%;
+            /* Adjust the width as needed */
+            height: auto;
+            display: inline-block;
+            /* Align image horizontally */
+            border-radius: 20px;
+            /* Optional: add border radius for a circular image */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Optional: add a shadow effect */
+        }
+
+        table+table {
+            margin-top: 20px;
+            /* Adjust margin as needed */
+        }
+
+
+        .page-header {
+            background-color: #87CEEB;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-form {
+            margin-right: 20px;
+        }
+
+        .search-form input[type="text"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+            width: 250px;
+        }
+        .header_download{
+            display: none;
+        }
+        .search-form button,
+        .export-btn button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .search-form button:hover,
+        .export-btn button:hover {
+            background-color: #218838;
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#your-form-id').on('submit', function (e) {
+            e.preventDefault();  
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function (response) {
+                    $('#example tbody').empty();
+                    $.each(response.data, function (index, item) {
+                        $('#example tbody').append(
+                            '<tr style="font-size: smaller;">' +
+                            '<td>' + item.id + '</td>' +
+                            '<td>' + item.Cat + '</td>' +
+                            '<td>' + item.Batch_Code + '</td>' +
+                            '<td>' + item.Center_code + '</td>' +
+                            '<td>' + item.Roll_No + '</td>' +
+                            '<td>' + item.Course_Name + '</td>' +
+                            '<td>' + item.Registration_number + '</td>' +
+                            '<td>' + item.Name_of_the_Candidate + '</td>' +
+                            '<td>' + item.Date_of_Exam + '</td>' +
+                            '<td>' + item.Practical1 + '</td>' +
+                            '<td>' + item.Internal_Assessment + '</td>' +
+                            '<td>' + item.Project + '</td>' +
+                            '<td>' + item.Typing_Speed + '</td>' +
+                            '<td>' + item.Theory1 + '</td>' +
+                            '<td>' + item.Theory2 + '</td>' +
+                            '<td>' + item.Total + '</td>' +
+                            '</tr>'
+                        );
+                    });
+                    if (response.cn) {
+                        $('.header_download').html('<h3>Course Name: ' + response.cn + '</h3>').show();
+                    } else if (response.bc) {
+                        $('.header_download').html('<h3>Batch Code: ' + response.bc + '</h3>').show();
+                    }
+                },
+                error: function (response) {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
+{% block main %}
+    <div class="container-fluid bg-light m-1 p-1">
+        <div class="container-fluid bg-light" style="border-bottom: 2px solid green;">
+            <form id="your-form-id" method="post">
+                {% csrf_token %}
+                
+
+    <label for="date">From Date:</label>
+    <input type="date" name="fromdate" id="date" value="{{ from_date }}">
+    <label for="sec_date">To Date:</label>
+    <input type="date" name="todate" id="date_range" value="{{ to_date }}">
+
+
+  <label for="batch_code">Batch Code:</label>
+    <select name="batch_code" id="batch_code">
+        <option value="">SELECT</option>
+        {% for code in batch_codes %}
+            <option value="{{ code }}">{{ code }}</option>
+        {% endfor %}
+    </select>
+
+
+    <label for="course_name">Course Name:</label>
+    <select name="course_name" id="course_name">
+         <option value="">SELECT</option>
+        {% for name in course_names %}
+            <option value="{{ name }}">{{ name }}</option>
+        {% endfor %}
+    </select>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <hr>
+        <div class="row bg-light">
+            <table id="example">
+                
+<div class="header_download">
+                        {% if cn is not None %}
+                    <h3>Course Name: {{cn}}</h3>
+                    {% elif bc is not None %}
+                    <h3>Batch Code: {{bc}}</h3>
+                    {%endif%}
+                    </div>
+                <thead>
+                    <tr style="font-weight: bolder;font-size: small;word-break: break-all;">
+                        <th style="width:2%;">S.No</th>
+                        <th style="width:1%;">Cat</th>
+                        <th style="width:3%;">Batch Code</th>
+                        <th style="width:3%;">Center Code</th>
+                        <th style="width:5%;">Roll Number</th>
+                        <th style="width:6%;">Course_Name</th>
+                        <th style="width:5%;">Registration Number</th>
+                        <th style="width:8%;">Name of the Candidate</th>
+                        <th style="width:5%;">Date of Exam</th>
+                        <th style="width:2%;">P1 60/90</th>
+                        <th style="width:2%;">IA 20/30</th>
+                        <th style="width:2%;">P/A 20/30</th>
+                        <th style="width:2%;">Ty</th>
+                        <th style="width:2%;">T1</th>
+                        <th style="width:2%;">T2</th>
+                        <th style="width:3%;">Total</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in data %}
+                    <tr style="font-size: smaller;">
+                        <!-- Add other non-editable fields -->
+
+                        <td>{{item.id }}</td>
+                        <td>{{item.Cat}}</td>
+                        <td>{{item.Batch_Code}}</td>
+                        <td>{{item.Center_code}}</td>
+                        <td>{{item.Roll_No }}</td>
+                        <td>{{item.Course_Name }}</td>
+                        <td>{{item.Registration_number}}</td>
+                        <td>{{item.Name_of_the_Candidate }}</td>
+                        <td>{{item.Date_of_Exam}}</td>
+                        <td>{{item.Practical1}}</td>
+                        <td>{{item.Internal_Assessment}}</td>
+                        <td>{{item.Project}}</td>
+                        <td>{{item.Typing_Speed}}</td>
+                        <td>{{item.Theory1}}</td>
+                        <td>{{item.Theory2}}</td>
+                        <td>{{item.Total}}</td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+{% endblock %}

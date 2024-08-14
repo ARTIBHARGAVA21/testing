@@ -1,0 +1,305 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Data Table</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>  
+    <script>
+    $(document).ready(function () {
+        function updateStatusColumn() {
+            $('#example tbody tr').each(function () {
+                var practicalMarks = parseFloat($(this).find('input[name="practical1"]').val());
+                var status = practicalMarks > 30 ? 'Pass' : 'Fail';
+                $(this).find('.status-column').text(status);
+            });
+        }
+
+        updateStatusColumn();
+
+        $('.edit-button').click(function () {
+            var row = $(this).closest('tr');
+            row.find('.editable').prop('readonly', false).addClass('editing');
+            row.find('.save-button').show();
+            row.find('.edit-button').hide();
+        });
+
+        $('.save-button').click(function () {
+            var row = $(this).closest('tr');
+            var data = {
+                'practical1': row.find('.field1').val(),
+                'internal': row.find('.field2').val(),
+                'project': row.find('.field3').val(),
+                'typing_speed': row.find('.field4').val(),
+                'theory1': row.find('.field5').val(),
+                'theory2': row.find('.field6').val(),
+                'total': row.find('.field7').val(),
+                'id': row.find('input[name="id"]').val()  // Adding the primary key
+            };
+
+            // AJAX request to save the edited data
+            $.ajax({
+                type: 'POST',
+                url: '/data/', 
+                data: data,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        alert('Data saved successfully');
+                        row.find('.editable').prop('readonly', true).removeClass('editing');
+                        row.find('.save-button').hide();
+                        row.find('.edit-button').show();
+                        updateStatusColumn(); 
+                    } else {
+                        alert('Error occurred while saving data');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Search form styles */
+        .table-container {
+            overflow-x: hidden;
+            /* Hide horizontal scroll bar */
+            overflow-y: auto;
+            /* Show vertical scroll bar if needed */
+            border: 1px solid #ddd;
+            /* Add border for better visualization */
+            border-radius: 5px;
+            /* Add border radius for better appearance */
+        }
+
+        /* Table styles */
+        table {
+            overflow: hidden;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            table-layout: fixed;
+            /* Ensure fixed layout to prevent cell overflow */
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            word-wrap: break-word;
+            /* Wrap long words to prevent overflow */
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Editable fields styles */
+        .editable {
+            border: 1px solid #ddd;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        .editable.editing {
+            border: 1px solid #87CEEB;
+            background-color: #f0f8ff;
+            /* Light blue */
+        }
+
+        /* Edit and Save button styles */
+        .edit-button,
+        .save-button {
+            padding: 6px 10px;
+            border-radius: 3px;
+            background-color: #87CEEB;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .save-button {
+            background-color: #28a745;
+            /* Green */
+        }
+
+        .edit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .save-button:hover {
+            background-color: #218838;
+            /* Dark green */
+        }
+
+        .imgcontainer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .NeilitHeader {
+            width: 100%;
+            /* Adjust the width as needed */
+            height: auto;
+            display: inline-block;
+            /* Align image horizontally */
+            border-radius: 20px;
+            /* Optional: add border radius for a circular image */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Optional: add a shadow effect */
+        }
+
+        table+table {
+            margin-top: 20px;
+            /* Adjust margin as needed */
+        }
+
+
+        .page-header {
+            background-color: #87CEEB;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-form {
+            margin-right: 20px;
+        }
+
+        .search-form input[type="text"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+            width: 250px;
+        }
+
+        .search-form button,
+        .export-btn button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .search-form button:hover,
+        .export-btn button:hover {
+            background-color: #218838;
+        }
+    </style>
+
+</head>
+
+<body>
+    {% load static %}
+    <div class="page-header">
+        <a class="header-title" href="{% url 'admin_home'%}">Go to Dashboard</a>
+        <div class="header-actions">
+            <div class="search-form">
+                <form action="{% url 'display_data' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="q" placeholder="Search by Roll Number or Candidate Name">
+                    <button type="submit">Search Here</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <table id="example" style="font-size: smaller; overflow-wrap: break-word; width: 96%; margin: 1px auto;white-space:wrap">
+        <thead>
+            <tr>
+                <th style="width:3%;">SI. No.</th>
+                <th style="width:2%;">Cat</th>
+                <th style="width:4%;">Batch Code</th>
+                <th style="width:10%;">Roll Number</th>
+                <th style="width:10%;">Course_Name</th>
+                <th style="width:5%;">Registration Number</th>
+                <th style="width:8%;">Name of the Candidate</th>
+                <th style="width:5%;">Date of Exam</th>
+                <th>Practical 1(60/90)</th>
+                <th>Internal Assessment(20/30)</th>
+                <th>Project(out of 20/30)</th>
+                <th>Typing_Speed</th>
+                <th>Theory1</th>
+                <th>Theory2</th>
+                <th>Total</th>
+                <th>status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in data %}
+            <tr>
+                <!-- Add other non-editable fields -->
+                <input type="hidden" name="id" value="{{item.id }}">
+                <td>{{item.id }}</td>
+                <td>{{item.Cat}}</td>
+                <td>{{item.Batch_Code}}</td>
+                <td>{{item.Roll_No }}</td>
+                <td>{{item.Course_Name }}</td>
+                <td>{{item.Registration_number}}</td>
+                <td>{{ item.Name_of_the_Candidate }}</td>
+                <td>{{ item.Date_of_Exam}}</td>
+                <td><input type="text" name="practical1" class="editable field1" value="{{item.Practical1}}" readonly>
+                </td>
+                <td><input type="text" name="internal" class="editable field2" value="{{item.Internal_Assessment}}"
+                        readonly></td>
+                <td><input type="text" name="project" class="editable field3" value="{{item.Project}}" readonly></td>
+                <td><input type="text" name="Typing_Speed" class="editable field4" value="{{item.Typing_Speed}}"
+                        readonly></td>
+                <td><input type="text" name="Theory1" class="editable field5" value="{{item.Theory1}}" readonly></td>
+                <td><input type="text" name="Theory2" class="editable field6" value="{{item.Theory2}}" readonly></td>
+                <td><input type="text" name="Total" class="editable field7" value="{{item.Total}}" readonly></td>
+                 <td class="status-column"></td>
+                <td ><button class="edit-button">Edit</button><button class="save-button" style="display: none;">Save</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+</html>

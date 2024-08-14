@@ -1,0 +1,39 @@
+<!--  {% extends 'basic_faculty.html' %} -->
+<!-- {% endblock %} -->
+ 
+{% extends "basic.html" %}
+   <h1>Welcome, {{ logged_in_user.username }}</h1>
+{% block content %}
+  <h1>Create Non-Staff User</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+  </form>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>  
+ <script>
+    function submitForm() {
+        var formData = $('#signupForm').serialize();
+        $.ajax({
+            url: $('#signupForm').attr('action'),
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                $('.alert').remove();
+                if (response.success) {
+                    $('#signupForm').trigger('reset'); 
+                    $('.container-fluid').prepend('<div class="alert alert-success">Account created successfully!</div>');
+                } else {
+                    Object.keys(response.errors).forEach(function(key) {
+                        $('#' + key + '-error').remove();
+                        $('#' + key).after('<div id="' + key + '-error" class="alert alert-danger">' + response.errors[key][0] + '</div>');
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+</script> 
+{% endblock %}
